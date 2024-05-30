@@ -26,7 +26,7 @@
 - name: add templates for learning
   become: yes
   become_user: "{{learner_user}}"
-  template: src={{ item.name }} dest={{ item.destination }}
+  template: src={{ item.name }} dest={{ item.destination }} mode=755
   with_items:
     - { name: 'server.xml', destination: '/usr/share/tomcat/conf/' }
     - { name: 'catalina.j2', destination: '{{ tomcat_home }}/bin/catalina.sh' }
