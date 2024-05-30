@@ -1,10 +1,10 @@
-- name: checking the list of installed services
-  service_facts:
+# - name: checking the list of installed services
+#   service_facts:
 
-- name: Stop the monit
-  service: name=monit state=stopped
-  become: yes
-  when: ansible_facts.services.monit is defined
+# - name: Stop the monit
+#   service: name=monit state=stopped
+#   become: yes
+#   when: ansible_facts.services.monit is defined
 
 - name: Stop logstash process
   become: yes
@@ -48,9 +48,7 @@
     - CREATE INDEX ON :domain(IL_SYS_NODE_TYPE);
   ignore_errors: true
 
-- name: Start the monit
-  service: name=monit state=started
-  become: yes
-  when: ansible_facts.services.monit is defined
-
-
+# - name: Start the monit
+#   service: name=monit state=started
+#   become: yes
+#   when: ansible_facts.services.monit is defined
