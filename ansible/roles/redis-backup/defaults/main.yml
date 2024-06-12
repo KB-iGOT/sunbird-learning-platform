@@ -4,3 +4,5 @@ learner_user: learning
 redis_data_dir: /data
 redis_version: 6.2.5
 redis_dir: "/home/{{ learner_user }}/redis-{{ redis_version }}"
+backup_bucket: backup-bucket
+redis_backup_folder: redis-backup-{{ ansible_host }}
