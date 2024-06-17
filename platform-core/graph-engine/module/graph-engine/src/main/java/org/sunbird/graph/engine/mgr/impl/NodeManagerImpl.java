@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.sunbird.common.dto.Request;
 import org.sunbird.common.dto.Response;
 import org.sunbird.common.exception.ClientException;
@@ -46,6 +48,7 @@ import scala.concurrent.Future;
  */
 public class NodeManagerImpl extends BaseGraphManager implements INodeManager {
 
+	private static final Logger perfLogger = LogManager.getLogger("PerformanceTestLogger");
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -320,7 +323,7 @@ public class NodeManagerImpl extends BaseGraphManager implements INodeManager {
 		String graphId = (String) request.getContext().get(GraphHeaderParams.graph_id.name());
 		String nodeId = (String) request.get(GraphDACParams.node_id.name());
 		final Node node = (Node) request.get(GraphDACParams.node.name());
-		System.out.println("The graphId is: " + graphId + " nodeId: " + nodeId);
+		perfLogger.info("The graphId is: " + graphId + " nodeId: " + nodeId);
 		final Boolean skipValidations = (Boolean) request.get(GraphDACParams.skip_validations.name());
 		if (!validateRequired(nodeId, node)) {
 			throw new ClientException(GraphEngineErrorCodes.ERR_GRAPH_UPDATE_NODE_MISSING_REQ_PARAMS.name(),

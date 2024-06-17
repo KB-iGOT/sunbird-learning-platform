@@ -3,6 +3,8 @@ package org.sunbird.graph.model.cache;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.sunbird.common.dto.Request;
 import org.sunbird.common.dto.Response;
 import org.sunbird.graph.cache.mgr.impl.NodeCacheManager;
@@ -22,6 +24,7 @@ import akka.actor.ActorRef;
 public class DefinitionCache extends BaseGraphManager {
 
 	private static IGraphDACSearchMgr searchMgr = new Neo4JBoltSearchMgrImpl();
+	private static final Logger perfLogger = LogManager.getLogger("PerformanceTestLogger");
 
 	public static DefinitionDTO getDefinitionNode(String graphId, String objectType) {
 		DefinitionDTO dto = getDefinitionFromCache(graphId, objectType);
@@ -67,7 +70,7 @@ public class DefinitionCache extends BaseGraphManager {
 	}
 	
 	private static DefinitionDTO getDefinitionFromCache(String graphId, String objectType) {
-		System.out.println("Inside getDefinitionFromCache the graphId: " + graphId + " objectType" + objectType);
+		perfLogger.info("Inside getDefinitionFromCache the graphId: " + graphId + " objectType" + objectType);
 		DefinitionDTO dto = (DefinitionDTO) NodeCacheManager.getDefinitionNode(graphId, objectType);
 		if (null == dto) {
 			dto = getDefinitionNodeFromGraph(graphId, objectType);

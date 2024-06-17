@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.sunbird.common.dto.Request;
 import org.sunbird.common.exception.ClientException;
@@ -39,6 +41,7 @@ public abstract class AbstractNode extends AbstractDomainObject implements INode
     
     /** The metadata. */
     protected Map<String, Object> metadata;
+    private static final Logger perfLogger = LogManager.getLogger("PerformanceTestLogger");
 
     /**
      * Instantiates a new abstract node.
@@ -275,7 +278,7 @@ public abstract class AbstractNode extends AbstractDomainObject implements INode
      */
     @SuppressWarnings("rawtypes")
     protected void checkMetadata(String key, Object value) {
-        System.out.println("The checkMetadata is key : " + key + " value: " + value);
+        perfLogger.info("The checkMetadata is key : " + key + " value: " + value);
         if (SystemProperties.isSystemProperty(key)) {
             throw new ClientException(GraphEngineErrorCodes.ERR_GRAPH_INVALID_PROPERTY.name(), key + " is a reserved system property");
         }

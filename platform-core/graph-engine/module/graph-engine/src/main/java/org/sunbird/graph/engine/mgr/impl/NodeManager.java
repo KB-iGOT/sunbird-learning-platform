@@ -15,6 +15,8 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.sunbird.common.Platform;
 import org.sunbird.common.dto.Property;
@@ -49,6 +51,7 @@ public class NodeManager {
 	
 	private IGraphDACSearchMgr searchMgr = new Neo4JBoltSearchMgrImpl();
 	private IGraphDACNodeMgr nodeMgr = new Neo4JBoltNodeMgrImpl();
+	private static final Logger perfLogger = LogManager.getLogger("PerformanceTestLogger");
 
 	public DefinitionDTO getNodeDefinition(Request request) {
         String objectType = (String) request.get(GraphDACParams.object_type.name());
@@ -331,7 +334,7 @@ public class NodeManager {
 	}
 
 	private void checkDataType(Object value, MetadataDefinition def, List<String> messages,Node node) {
-		System.out.println("Inside the checkDataTypes NodeManager: " + value + " Metadata: " + def);
+		perfLogger.info("Inside the checkDataTypes NodeManager: " + value + " Metadata: " + def);
 		if (null != value) {
 			String propName = def.getPropertyName();
 			String dataType = def.getDataType();

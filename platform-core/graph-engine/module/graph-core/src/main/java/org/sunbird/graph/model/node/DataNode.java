@@ -12,6 +12,8 @@ import java.util.Set;
 import java.util.Arrays;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.sunbird.common.Platform;
 import org.sunbird.common.dto.Property;
@@ -48,6 +50,7 @@ public class DataNode extends AbstractNode {
 	private String objectType;
 	private List<Relation> inRelations;
 	private List<Relation> outRelations;
+	private static final Logger perfLogger = LogManager.getLogger("PerformanceTestLogger");
 
 	public DataNode(BaseGraphManager manager, String graphId, String nodeId, String objectType,
 			Map<String, Object> metadata) {
@@ -536,7 +539,7 @@ public class DataNode extends AbstractNode {
 
 	@SuppressWarnings("rawtypes")
 	private void checkDataType(Object value, MetadataDefinition def, List<String> messages) {
-		System.out.println("Inside the checkDataTypes dataNode: " + value + " Metadata:" + def);
+		perfLogger.info("Inside the checkDataTypes dataNode: " + value + " Metadata:" + def);
 		if (null != value) {
 			String propName = def.getPropertyName();
 			String dataType = def.getDataType();
