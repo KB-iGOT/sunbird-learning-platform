@@ -39,11 +39,7 @@ public class NodeCacheManager {
 		validateRequired(graphId, objectType, GraphCacheErrorCodes.ERR_CACHE_GET_DEF_NODE_ERROR.name());
 		String key = CacheKeyGenerator.getKey(graphId, objectType, RedisKeysEnum.DEF_NODE.name());
 		TelemetryManager.log("Fetching definition node from cache having objectType: " + objectType + " in graph: "+ graphId);
-        try {
-            perfLogger.info("Inside Node Cache Manager getDefinitionNode : key ::" + key + "definationCache:" + objectMapper.writeValueAsString(definitionNodeCache.get(key)));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+		perfLogger.info("Inside Node Cache Manager getDefinitionNode : key ::" + key);
         return definitionNodeCache.get(key);
 	}
 	
