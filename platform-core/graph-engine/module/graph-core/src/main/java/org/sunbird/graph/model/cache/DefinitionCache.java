@@ -67,6 +67,7 @@ public class DefinitionCache extends BaseGraphManager {
 	}
 	
 	private static DefinitionDTO getDefinitionFromCache(String graphId, String objectType) {
+		System.out.println("Inside getDefinitionFromCache the graphId: " + graphId + " objectType" + objectType);
 		DefinitionDTO dto = (DefinitionDTO) NodeCacheManager.getDefinitionNode(graphId, objectType);
 		if (null == dto) {
 			dto = getDefinitionNodeFromGraph(graphId, objectType);
@@ -78,6 +79,7 @@ public class DefinitionCache extends BaseGraphManager {
 	@SuppressWarnings("unchecked")
 	private static DefinitionDTO getDefinitionNodeFromGraph(String graphId, String objectType) {
 		try {
+			System.out.println("Inside getDefinitionNodeFromGraph the graphId: " + graphId + " objectType" + objectType);
 			Request request = new Request();
 			request.getContext().put(GraphHeaderParams.graph_id.name(), graphId);
 			SearchCriteria sc = new SearchCriteria();

@@ -331,6 +331,7 @@ public class NodeManager {
 	}
 
 	private void checkDataType(Object value, MetadataDefinition def, List<String> messages,Node node) {
+		System.out.println("Inside the checkDataTypes NodeManager: " + value + " Metadata: " + def);
 		if (null != value) {
 			String propName = def.getPropertyName();
 			String dataType = def.getDataType();

@@ -320,6 +320,7 @@ public class NodeManagerImpl extends BaseGraphManager implements INodeManager {
 		String graphId = (String) request.getContext().get(GraphHeaderParams.graph_id.name());
 		String nodeId = (String) request.get(GraphDACParams.node_id.name());
 		final Node node = (Node) request.get(GraphDACParams.node.name());
+		System.out.println("The graphId is: " + graphId + " nodeId: " + nodeId);
 		final Boolean skipValidations = (Boolean) request.get(GraphDACParams.skip_validations.name());
 		if (!validateRequired(nodeId, node)) {
 			throw new ClientException(GraphEngineErrorCodes.ERR_GRAPH_UPDATE_NODE_MISSING_REQ_PARAMS.name(),

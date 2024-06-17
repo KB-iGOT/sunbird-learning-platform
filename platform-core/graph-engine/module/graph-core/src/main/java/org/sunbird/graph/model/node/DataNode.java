@@ -536,6 +536,7 @@ public class DataNode extends AbstractNode {
 
 	@SuppressWarnings("rawtypes")
 	private void checkDataType(Object value, MetadataDefinition def, List<String> messages) {
+		System.out.println("Inside the checkDataTypes dataNode: " + value + " Metadata:" + def);
 		if (null != value) {
 			String propName = def.getPropertyName();
 			String dataType = def.getDataType();

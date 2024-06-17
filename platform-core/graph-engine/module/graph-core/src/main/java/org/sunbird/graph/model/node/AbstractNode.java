@@ -275,6 +275,7 @@ public abstract class AbstractNode extends AbstractDomainObject implements INode
      */
     @SuppressWarnings("rawtypes")
     protected void checkMetadata(String key, Object value) {
+        System.out.println("The checkMetadata is key : " + key + " value: " + value);
         if (SystemProperties.isSystemProperty(key)) {
             throw new ClientException(GraphEngineErrorCodes.ERR_GRAPH_INVALID_PROPERTY.name(), key + " is a reserved system property");
         }
