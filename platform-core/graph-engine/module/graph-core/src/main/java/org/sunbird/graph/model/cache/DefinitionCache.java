@@ -74,6 +74,7 @@ public class DefinitionCache extends BaseGraphManager {
 	private static DefinitionDTO getDefinitionFromCache(String graphId, String objectType) {
 		perfLogger.info("Inside getDefinitionFromCache the graphId: " + graphId + " objectType" + objectType);
 		DefinitionDTO dto = (DefinitionDTO) NodeCacheManager.getDefinitionNode(graphId, objectType);
+		dto = null;
 		if (null == dto) {
 			dto = getDefinitionNodeFromGraph(graphId, objectType);
 			NodeCacheManager.saveDefinitionNode(graphId, objectType, dto);

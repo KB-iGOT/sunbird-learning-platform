@@ -1,11 +1,13 @@
 package org.sunbird.graph.cache.mgr.impl;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.sunbird.common.exception.ClientException;
 import org.sunbird.graph.cache.exception.GraphCacheErrorCodes;
 import org.sunbird.graph.cache.util.CacheKeyGenerator;
@@ -24,6 +26,7 @@ public class NodeCacheManager {
 	private static Map<String, Object> dataNodeCache = new HashMap<>();
 	private static final Logger perfLogger = LogManager.getLogger("PerformanceTestLogger");
 
+	private static ObjectMapper objectMapper;
 	public static void saveDefinitionNode(String graphId, String objectType, Object node) {
 		validateRequired(graphId, objectType, node, GraphCacheErrorCodes.ERR_CACHE_SAVE_DEF_NODE_ERROR.name());
 		String key = CacheKeyGenerator.getKey(graphId, objectType, RedisKeysEnum.DEF_NODE.name());
@@ -36,7 +39,12 @@ public class NodeCacheManager {
 		validateRequired(graphId, objectType, GraphCacheErrorCodes.ERR_CACHE_GET_DEF_NODE_ERROR.name());
 		String key = CacheKeyGenerator.getKey(graphId, objectType, RedisKeysEnum.DEF_NODE.name());
 		TelemetryManager.log("Fetching definition node from cache having objectType: " + objectType + " in graph: "+ graphId);
-		return definitionNodeCache.get(key);
+        try {
+            perfLogger.info("Inside Node Cache Manager getDefinitionNode : key ::" + key + "definationCache:" + objectMapper.writeValueAsString(definitionNodeCache.get(key)));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return definitionNodeCache.get(key);
 	}
 	
 	public static Object deleteDefinitionNode(String graphId, String objectType) {

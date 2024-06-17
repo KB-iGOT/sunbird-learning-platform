@@ -15,6 +15,8 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.sunbird.common.dto.Property;
 import org.sunbird.common.dto.Request;
@@ -65,6 +67,7 @@ public class Graph extends AbstractDomainObject {
 
 	public static final String ERROR_MESSAGES = "ERROR_MESSAGES";
 	public static Timeout WAIT_TIMEOUT = new Timeout(Duration.create(30, TimeUnit.SECONDS));
+	private static final Logger perfLogger = LogManager.getLogger("PerformanceTestLogger");
 
 	public Graph(BaseGraphManager manager, String graphId) {
 		super(manager, graphId);

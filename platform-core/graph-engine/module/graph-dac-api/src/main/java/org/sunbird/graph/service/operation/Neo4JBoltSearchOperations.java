@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.sunbird.common.dto.Property;
 import org.sunbird.common.dto.Request;
 import org.sunbird.common.exception.ResourceNotFoundException;
@@ -49,6 +51,8 @@ public class Neo4JBoltSearchOperations {
 	 *            the request
 	 * @return the node by id
 	 */
+	private static final Logger perfLogger = LogManager.getLogger("PerformanceTestLogger");
+
 	public static Node getNodeById(String graphId, Long nodeId, Boolean getTags, Request request) {
 
 		if (StringUtils.isBlank(graphId))
@@ -799,9 +803,11 @@ public class Neo4JBoltSearchOperations {
 			parameterMap.put(GraphDACParams.request.name(), request);
 
 			String query = SearchQueryGenerationUtil.generateSearchNodesCypherQuery(parameterMap);
+			perfLogger.info("The query for the Neo4J search is: " + query);
 			TelemetryManager.log("Search Query: " + query);
 			Map<String, Object> params = searchCriteria.getParams();
 			TelemetryManager.log("Search Params: " + params);
+			perfLogger.info("The query for the Neo4J params is: " + params);
 			StatementResult result = session.run(query, params);
 			Map<Long, Object> nodeMap = new LinkedHashMap<Long, Object>();
 			Map<Long, Object> relationMap = new HashMap<Long, Object>();
