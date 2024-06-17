@@ -1,5 +1,6 @@
 package org.sunbird.graph.model.node;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Arrays;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -51,6 +53,7 @@ public class DataNode extends AbstractNode {
 	private List<Relation> inRelations;
 	private List<Relation> outRelations;
 	private static final Logger perfLogger = LogManager.getLogger("PerformanceTestLogger");
+	ObjectMapper object = new ObjectMapper();
 
 	public DataNode(BaseGraphManager manager, String graphId, String nodeId, String objectType,
 			Map<String, Object> metadata) {
@@ -539,7 +542,14 @@ public class DataNode extends AbstractNode {
 
 	@SuppressWarnings("rawtypes")
 	private void checkDataType(Object value, MetadataDefinition def, List<String> messages) {
-		perfLogger.info("Inside the checkDataTypes dataNode: " + value + " Metadata:" + def);
+		if (value != null && value.equals("application/survey")) {
+            try {
+                perfLogger.info("Inside the checkDataTypes dataNode: " + value + " Metadata:" + object.writeValueAsString(def));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
 		if (null != value) {
 			String propName = def.getPropertyName();
 			String dataType = def.getDataType();

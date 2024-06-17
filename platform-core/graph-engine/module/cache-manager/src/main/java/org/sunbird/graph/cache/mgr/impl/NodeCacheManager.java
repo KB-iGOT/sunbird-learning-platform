@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.sunbird.common.exception.ClientException;
 import org.sunbird.graph.cache.exception.GraphCacheErrorCodes;
 import org.sunbird.graph.cache.util.CacheKeyGenerator;
@@ -20,6 +22,7 @@ public class NodeCacheManager {
 
 	private static Map<String, Object> definitionNodeCache = new HashMap<>();
 	private static Map<String, Object> dataNodeCache = new HashMap<>();
+	private static final Logger perfLogger = LogManager.getLogger("PerformanceTestLogger");
 
 	public static void saveDefinitionNode(String graphId, String objectType, Object node) {
 		validateRequired(graphId, objectType, node, GraphCacheErrorCodes.ERR_CACHE_SAVE_DEF_NODE_ERROR.name());
@@ -29,6 +32,7 @@ public class NodeCacheManager {
 	}
 
 	public static Object getDefinitionNode(String graphId, String objectType) {
+		perfLogger.info("Inside Node Cache Manager getDefinitionNode the graphId: " + graphId + " objectType" + objectType);
 		validateRequired(graphId, objectType, GraphCacheErrorCodes.ERR_CACHE_GET_DEF_NODE_ERROR.name());
 		String key = CacheKeyGenerator.getKey(graphId, objectType, RedisKeysEnum.DEF_NODE.name());
 		TelemetryManager.log("Fetching definition node from cache having objectType: " + objectType + " in graph: "+ graphId);

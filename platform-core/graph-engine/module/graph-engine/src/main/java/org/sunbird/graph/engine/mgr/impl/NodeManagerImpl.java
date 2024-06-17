@@ -1,5 +1,6 @@
 package org.sunbird.graph.engine.mgr.impl;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,6 +11,7 @@ import java.util.Map.Entry;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.sunbird.common.dto.Request;
 import org.sunbird.common.dto.Response;
 import org.sunbird.common.exception.ClientException;
@@ -49,6 +51,7 @@ import scala.concurrent.Future;
 public class NodeManagerImpl extends BaseGraphManager implements INodeManager {
 
 	private static final Logger perfLogger = LogManager.getLogger("PerformanceTestLogger");
+	ObjectMapper mapper = new ObjectMapper();
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -346,7 +349,12 @@ public class NodeManagerImpl extends BaseGraphManager implements INodeManager {
 				}
 				Map<String, Object> dbMetadata = dbNode.getMetadata();
 				if (null != dbMetadata && !dbMetadata.isEmpty()) {
-					dbMetadata.remove(GraphDACParams.versionKey.name());
+                    try {
+                        perfLogger.info("The Inside dbMetadata : " + mapper.writeValueAsString(dbMetadata));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    dbMetadata.remove(GraphDACParams.versionKey.name());
 					dbMetadata.remove(GraphDACParams.lastUpdatedBy.name());
 					// add lastStatusChangedOn if status got changed
 					String currentStatus = (String) node.getMetadata().get(GraphDACParams.status.name());
@@ -363,7 +371,12 @@ public class NodeManagerImpl extends BaseGraphManager implements INodeManager {
 				getRelationsDelta(addRels, delRels, dbNode, datanode);
 				dbNodes.add(dbNode);
 			}
-			if (messages.isEmpty()) {
+            try {
+                perfLogger.info("The Outiside dbMetadata the meassage is: " + mapper.writeValueAsString(messages));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            if (messages.isEmpty()) {
 				// validate the node
 				if (null == skipValidations || !skipValidations) {
 					Map<String, List<String>> validationMap = datanode.validateNode(request);

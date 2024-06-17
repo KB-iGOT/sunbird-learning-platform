@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.sunbird.common.dto.Request;
 import org.sunbird.common.dto.Response;
 import org.sunbird.graph.cache.mgr.impl.NodeCacheManager;
@@ -25,6 +26,7 @@ public class DefinitionCache extends BaseGraphManager {
 
 	private static IGraphDACSearchMgr searchMgr = new Neo4JBoltSearchMgrImpl();
 	private static final Logger perfLogger = LogManager.getLogger("PerformanceTestLogger");
+	static ObjectMapper objectMapper = new ObjectMapper();
 
 	public static DefinitionDTO getDefinitionNode(String graphId, String objectType) {
 		DefinitionDTO dto = getDefinitionFromCache(graphId, objectType);
@@ -82,7 +84,7 @@ public class DefinitionCache extends BaseGraphManager {
 	@SuppressWarnings("unchecked")
 	private static DefinitionDTO getDefinitionNodeFromGraph(String graphId, String objectType) {
 		try {
-			System.out.println("Inside getDefinitionNodeFromGraph the graphId: " + graphId + " objectType" + objectType);
+			perfLogger.info("Inside getDefinitionNodeFromGraph the graphId: " + graphId + " objectType" + objectType);
 			Request request = new Request();
 			request.getContext().put(GraphHeaderParams.graph_id.name(), graphId);
 			SearchCriteria sc = new SearchCriteria();
@@ -98,6 +100,7 @@ public class DefinitionCache extends BaseGraphManager {
 				Node node = nodes.get(0);
 				DefinitionDTO dto = new DefinitionDTO();
 				dto.fromNode(node);
+				perfLogger.info("Inside getDefinitionNodeFromGraph the graphId: " + graphId + " dto: " + objectMapper.writeValueAsString(dto));
 				return dto;
 			}
 		} catch (Exception e) {
