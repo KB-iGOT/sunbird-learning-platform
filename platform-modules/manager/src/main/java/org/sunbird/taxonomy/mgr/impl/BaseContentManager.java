@@ -393,7 +393,9 @@ public abstract class BaseContentManager extends BaseManager {
 
         setPassportKey(changedData);
 
-        removeRelationsFromData(definition, changedData);
+        if (StringUtils.isNotBlank(objectType) && !objectType.equalsIgnoreCase("Asset")) {
+            removeRelationsFromData(definition, changedData);
+        }
 
         //Prepare Node Object to be updated
         Node domainObj = ConvertToGraphNode.convertToGraphNode(changedData, definition, null);
@@ -461,6 +463,7 @@ public abstract class BaseContentManager extends BaseManager {
         //Get in-relation and out-relation titles
         List<String> relationTitles = new ArrayList<>();
         List<RelationDefinition> relations = new ArrayList<>();
+
         relations.addAll(definition.getInRelations());
         relations.addAll(definition.getOutRelations());
         relations.forEach(relation -> relationTitles.add(relation.getTitle()));
