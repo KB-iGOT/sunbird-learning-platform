@@ -144,6 +144,8 @@ public abstract class BaseRequestRouter extends UntypedActor {
     }
 
     private void setResponseCode(Response res, Throwable e) {
+        perfLogger.error(e.getStackTrace());
+        perfLogger.error(e.getMessage());
         if (e instanceof ClientException) {
             res.setResponseCode(ResponseCode.CLIENT_ERROR);
         } else if (e instanceof ServerException) {
