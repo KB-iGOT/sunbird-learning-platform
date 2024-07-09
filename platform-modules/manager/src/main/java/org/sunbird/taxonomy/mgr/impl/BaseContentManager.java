@@ -313,6 +313,12 @@ public abstract class BaseContentManager extends BaseManager {
     }
 
     public Response updateAllContents(String originalId, Map<String, Object> inputMap) throws Exception {
+        TelemetryManager.info("BaseContentManager::updateAllContents originalId: " + originalId);
+        try {
+            throw new Exception("Log error");
+        } catch(Exception e) {
+            TelemetryManager.error("BaseContentManager::updateAllContents:: Trace::", e);
+        }
         if (MapUtils.isEmpty(inputMap))
             return ERROR("ERR_CONTENT_INVALID_OBJECT", "Invalid Request", ResponseCode.CLIENT_ERROR);
 
