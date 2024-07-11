@@ -314,9 +314,12 @@ public abstract class BaseContentManager extends BaseManager {
 
     public Response updateAllContents(String originalId, Map<String, Object> inputMap) throws Exception {
         TelemetryManager.info("BaseContentManager::updateAllContents originalId: " + originalId);
+        long startTime = System.currentTimeMillis();
+        System.out.println("Platform-Modules.Manager::BaseContentManager::updateAllContents originalId: " + originalId);
         try {
             throw new Exception("Log error");
         } catch(Exception e) {
+            e.printStackTrace();
             TelemetryManager.error("BaseContentManager::updateAllContents:: Trace::", e);
         }
         if (MapUtils.isEmpty(inputMap))
@@ -325,6 +328,7 @@ public abstract class BaseContentManager extends BaseManager {
         //Clear redis cache before updates
         clearRedisCache(originalId);
 
+        System.out.println("TimeTaken to clear redis -> " + (System.currentTimeMillis() - startTime));
         //Check whether the node exists in graph db
         Response originalNodeResponse = getDataNode(TAXONOMY_ID, originalId);
         if (checkError(originalNodeResponse)) {
@@ -371,11 +375,12 @@ public abstract class BaseContentManager extends BaseManager {
                 if(checkError(imageUpdateResponse) || null == updateResponse)
                     return imageUpdateResponse;
             }
+            System.out.println("TimeTaken to update Neo4J : " + (System.currentTimeMillis() - startTime));
 
             //Clear redis cache after update is successful.
             TelemetryManager.info("Update is successful for ID: " + originalId + ", Cache is cleared.");
             clearRedisCache(originalId);
-
+            System.out.println("TimeTaken to compete systemUpdate : " + (System.currentTimeMillis() - startTime));
             return updateResponse;
         }
     }
