@@ -317,12 +317,6 @@ public abstract class BaseContentManager extends BaseManager {
         if (MapUtils.isEmpty(inputMap))
             return ERROR("ERR_CONTENT_INVALID_OBJECT", "Invalid Request", ResponseCode.CLIENT_ERROR);
 
-        try {
-            throw new Exception("Log error");
-        } catch(Exception e) {
-            e.printStackTrace();
-            TelemetryManager.error("BaseContentManager::updateAllContents:: Trace::", e);
-        }
         //Clear redis cache before updates
         clearRedisCache(originalId);
 
