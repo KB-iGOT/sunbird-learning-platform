@@ -8,4 +8,4 @@ port: 9092
 logstash_version: 6.8.21
 logstash_systemd_service: /etc/systemd/system/logstash.service
 logstash_jvm_opts: "-Xms1g -Xmx1g"
-logstash_java_home: "JAVA_HOME=/opt/jdk-11"
+logstash_java_home: "JAVA_HOME= /usr/lib/jvm/java-8-openjdk-amd64/jre"
