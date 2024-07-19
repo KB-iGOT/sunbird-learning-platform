@@ -5,15 +5,15 @@
     - "{{inventory_dir}}/secrets.yml"
   tasks:
     - name: Create group
-      group: 
-        name: hadoop 
+      group:
+        name: hadoop
         state: present
     - name: Create user
-      user: 
-        name: hduser 
-        comment: "hduser" 
-        group: hadoop 
-        groups: sudo 
+      user:
+        name: hduser
+        comment: "hduser"
+        group: hadoop
+        groups: sudo
         shell: /bin/bash
 
 - name: Install samza job server
@@ -22,7 +22,7 @@
     - "{{inventory_dir}}/secrets.yml"
   become: yes
   roles:
-    - jdk-1.8.0_121
+    - openjdk
     - yarn
     - samza-job-server
 
@@ -44,4 +44,4 @@
   become: yes
   remote_user: hduser
   roles:
-    - jdk-1.8.0_121
+    - openjdk
