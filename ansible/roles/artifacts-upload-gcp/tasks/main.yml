@@ -23,7 +23,7 @@
   environment: "{{ gcp_environment }}"
 
 - name: Upload to Google Cloud Storage
-  shell: gsutil cp {{ artifact_path }} gs://{{ artifacts_container }}/{{ artifact }}
+  shell: gsutil cp -r {{ artifact_path }} gs://{{ artifacts_container }}/{{ artifact }}
   async: 3600
   poll: 10
 

@@ -6,4 +6,4 @@ backup_add: "127.0.0.1:7362"
 var1: "_graph"
 service: learning
 graph_machine: "{{service}}{{var1}}"
-neo4j_backup_azure_container_name: neo4j-backup
+neo4j_backup_folder: neo4j-backup-{{ ansible_host }}
