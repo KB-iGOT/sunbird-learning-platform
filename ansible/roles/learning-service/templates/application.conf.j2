@@ -42,7 +42,7 @@ dialcode.search.limit=1000
 
 audit.es_conn_info="{{ audit_es_index_host  }}"
 
-#Assessment Item Configuration 
+#Assessment Item Configuration
 assessment.keyspace.name="{{ content_keyspace_name }}"
 assessment.keyspace.table="question_data"
 
@@ -139,7 +139,7 @@ defaultTokenCountAfterWord=10
 
 # Neo4j Graph Configuration
 graph.dir="/data/graphDB"
-akka.request_timeout=30
+akka.request_timeout=60
 environment.id="{{ environment_id }}"
 graph.passport.key.base="{{ graph_passport_key }}"
 route.domain="{{ learning_neo4j_bolt_url }}"
@@ -225,11 +225,12 @@ learning.content.type.not.copied.list=["Asset"]
 #Youtube License Validation Regex Pattern
 youtube.license.regex.pattern=["\\?vi?=([^&]*)", "watch\\?.*v=([^&]*)", "(?:embed|vi?)/([^/?]*)","^([A-Za-z0-9\\-\\_]*)"]
 
-#Azure Storage details
-cloud_storage_type="{{ cloud_store }}"
-azure_storage_key="{{sunbird_public_storage_account_name}}"
-azure_storage_secret="{{sunbird_public_storage_account_key}}"
-azure_storage_container="{{ azure_public_container }}"
+#Cloud Storage details
+cloud_storage_type="{{ cloud_service_provider }}"
+cloud_storage_key="{{ cloud_storage_key }}"
+cloud_storage_secret="""{{ cloud_storage_secret }}"""
+cloud_storage_container="{{ cloud_storage_content_bucketname }}"
+cloud_storage_endpoint="{{ cloud_storage_endpoint }}"
 
 installation.id="{{ instance_name }}"
 

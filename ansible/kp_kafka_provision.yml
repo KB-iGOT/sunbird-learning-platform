@@ -1,0 +1,10 @@
+---
+- hosts: "{{remote}}"
+  become: yes
+  roles:
+    - openjdk
+    - ansible-kafka-upgrade
+  post_tasks:
+   - service: name=monit state=started
+     become: yes
+     ignore_errors: true

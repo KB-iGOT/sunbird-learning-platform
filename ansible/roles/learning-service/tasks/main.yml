@@ -1,10 +1,10 @@
-- name: checking the list of installed services
-  service_facts:
+# - name: checking the list of installed services
+#   service_facts:
 
-- name: Stop the monit
-  service: name=monit state=stopped
-  become: yes
-  when: ansible_facts.services.monit is defined
+# - name: Stop the monit
+#   service: name=monit state=stopped
+#   become: yes
+#   when: ansible_facts.services.monit is defined
 
 - name: Stop tomcat
   become: yes
@@ -23,7 +23,7 @@
 - name: add templates for learning
   become: yes
   become_user: "{{learner_user}}"
-  template: src={{ item.name }} dest={{ item.destination }}
+  template: src={{ item.name }} dest={{ item.destination }} mode=755
   with_items:
     - { name: 'catalina.j2', destination: '{{ tomcat_home }}/bin/catalina.sh' }
 
@@ -72,7 +72,7 @@
   fail: msg="Health check failed for learning-service"
   when: "learning_process.stdout >= '1'"
 
-- name: Start the monit
-  service: name=monit state=started
-  become: yes
-  when: ansible_facts.services.monit is defined
+# - name: Start the monit
+#   service: name=monit state=started
+#   become: yes
+#   when: ansible_facts.services.monit is defined

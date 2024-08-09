@@ -4,14 +4,14 @@
   vars_files:
        - ['{{inventory_dir}}/secrets.yml']
   roles:
-    - java
+    - openjdk
     - lp-contenttool
-  tags: 
+  tags:
     - provision
 
 - name: "LP Content-Tool Run"
   hosts: prod-migration
-  tags: 
+  tags:
     - run
   tasks:
     - name: Run Sync tool with given command and parameters.

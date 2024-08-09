@@ -61,6 +61,8 @@ redis_host: "{{ groups['redis1'][0] }}"
 dp_redis_host: "{{ groups['dp-redis'][0] }}"
 kafka_brokers: "{{groups['processing-cluster-kafka']|join(':9092,')}}:9092"
 zookeepers: "{{groups['processing-cluster-zookeepers']|join(':2181,')}}:2181"
+### kafka and zookeeper ip vars and being used in kafka topiccreation role.
+processing_zookeeper_ip: "{{ groups['processing-cluster-zookeepers'][0] }}"
 audit_es_host: "{{ groups['composite-search-cluster']|join(':9200,')}}:9200"
 search_es_host: "{{ groups['composite-search-cluster']|join(':9200,')}}:9200"
 search_lms_es_host: "{{ groups['core-es']|join(':9200,')}}:9200"

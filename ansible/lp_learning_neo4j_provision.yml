@@ -43,7 +43,6 @@
         server_id: "{% for servername in play_hosts %}{% if inventory_hostname==servername %}{{ loop.index }}{% endif %}{% endfor %}"
   become: yes
   roles:
-    - jdk-1.8.0_121
-    - jdk11
+    - openjdk
     - neo4j-cluster
     - logstash

@@ -274,7 +274,9 @@
             "audio/wav",
             "application/json",
             "application/quiz",
-            "external/redirect"
+            "external/redirect",
+            "application/survey",
+            "application/offline"
           ],
           "defaultValue": "application/vnd.ekstep.ecml-archive",
           "renderingHints": "{ 'inputType': 'select',  'order': 9 }",
@@ -1163,7 +1165,12 @@
             "Course",
             "Theory",
             "Worksheet",
-            "Practical"
+            "Practical",
+            "Youtube",
+            "MP3",
+            "MP4",
+            "PDF",
+            "Link"
           ],
           "indexed": true,
           "draft": false
