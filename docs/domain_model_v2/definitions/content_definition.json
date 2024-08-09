@@ -274,6 +274,7 @@
             "audio/wav",
             "application/json",
             "application/quiz",
+            "external/redirect",
             "application/survey",
             "application/offline"
           ],
