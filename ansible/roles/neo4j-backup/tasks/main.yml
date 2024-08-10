@@ -32,7 +32,7 @@
     var: var1.stdout
 
 - set_fact:
-    neo4j_backup_name: "neo4j_backup_{{ lookup('pipe', 'date +%Z-%Y-%m-%d-%H-%M-%S') }}"
+    neo4j_backup_name: "neo4j_backup_{{ansible_hostname}}_{{ lookup('pipe', 'date +%Z-%Y-%m-%d-%H-%M-%S') }}"
 - name: upload to gcs
   include_role:
     name: artifacts-upload-gcp
