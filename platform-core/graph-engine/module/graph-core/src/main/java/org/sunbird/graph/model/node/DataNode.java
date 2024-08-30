@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.Arrays;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.StopWatch;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.sunbird.common.Platform;
 import org.sunbird.common.dto.Property;
@@ -323,6 +324,9 @@ public class DataNode extends AbstractNode {
 	}
 
 	public Response updateNode(Request req) {
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+		TelemetryManager.info("DataNode updateNOde function started at this time");
 		checkMetadata(metadata);
 		Request request = new Request(req);
 		request.put(GraphDACParams.node.name(), toNode());
@@ -335,6 +339,9 @@ public class DataNode extends AbstractNode {
 			if (manager.validateRequired(identifier) && manager.validateRequired(versionKey)) {
 				setNodeId(identifier);
 				setVersionKey(versionKey);
+				stopWatch.stop();
+				long durationInSeconds = stopWatch.getTime() / 1000;
+				TelemetryManager.info("DataNode updateNode function completed in " + durationInSeconds + " seconds");
 				return response;
 			} else {
 				return manager.getErrorResponse(GraphEngineErrorCodes.ERR_GRAPH_UPDATE_NODE_ERROR.name(),

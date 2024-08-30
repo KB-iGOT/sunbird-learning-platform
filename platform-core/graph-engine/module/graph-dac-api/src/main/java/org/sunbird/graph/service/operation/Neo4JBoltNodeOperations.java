@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.StopWatch;
 import org.sunbird.common.Platform;
 import org.sunbird.common.dto.Property;
 import org.sunbird.common.dto.Request;
@@ -201,7 +202,9 @@ public class Neo4JBoltNodeOperations {
 
 	@SuppressWarnings("unchecked")
 	public static Node updateNode(String graphId, Node node, Request request) {
-
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+		TelemetryManager.info("Neo4jBoltNodeOperation updateNOde function started");
 		if (StringUtils.isBlank(graphId))
 			throw new ClientException(DACErrorCodeConstants.INVALID_GRAPH.name(),
 					DACErrorMessageConstants.INVALID_GRAPH_ID + " | [Update Node Operation Failed.]");
@@ -238,6 +241,9 @@ public class Neo4JBoltNodeOperations {
 			NodeQueryGenerationUtil.generateUpdateNodeCypherQuery(parameterMap);
 			Map<String, Object> queryMap = (Map<String, Object>) parameterMap
 					.get(GraphDACParams.queryStatementMap.name());
+			StopWatch blockStopWatch = new StopWatch();
+			blockStopWatch.start();
+			TelemetryManager.info("Neo4jBoltNodeOperation updateNOde function block started");
 			for (Entry<String, Object> entry : queryMap.entrySet()) {
 				String statementTemplate = StringUtils.removeEnd(
 						(String) ((Map<String, Object>) entry.getValue()).get(GraphDACParams.query.name()),
@@ -273,6 +279,9 @@ public class Neo4JBoltNodeOperations {
 					}
 				}
 			}
+			blockStopWatch.stop();
+			long blockSeconds = blockStopWatch.getTime() / 1000;
+			TelemetryManager.info("Neo4jBoltNodeOperation updateNode function block completed in " + blockSeconds + " seconds");
 
 		} catch (Exception e) {
 			if (!(e instanceof MiddlewareException)) {
@@ -282,6 +291,9 @@ public class Neo4JBoltNodeOperations {
 				throw e;
 			}
 		}
+		stopWatch.stop();
+		long durationInSeconds = stopWatch.getTime() / 1000;
+		TelemetryManager.info("Neo4jBoltNodeOperation updateNode function completed in " + durationInSeconds + " seconds");
 		return node;
 	}
 

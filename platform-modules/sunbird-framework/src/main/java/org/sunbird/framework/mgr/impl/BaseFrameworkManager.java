@@ -105,7 +105,7 @@ public class BaseFrameworkManager extends BaseManager {
 			validateTranslation(map);
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
-		TelemetryManager.log("BaseFramework update function started");
+		TelemetryManager.info("BaseFramework update function started");
 		DefinitionDTO definition = getDefinition(GRAPH_ID, objectType);
 		Response getNodeResponse = getDataNode(GRAPH_ID, identifier);
 		Node graphNode = (Node) getNodeResponse.get(GraphDACParams.node.name());
@@ -235,20 +235,25 @@ public class BaseFrameworkManager extends BaseManager {
 	 * 
 	 */
 	private Response updateDataNode(Node node) {
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
 		Response response = new Response();
 		if (null != node) {
 			String channelId = node.getIdentifier();
 
-			TelemetryManager.log("Getting Update Node Request For Node ID: " + node.getIdentifier());
+			TelemetryManager.info("Getting Update Node Request For Node ID: " + node.getIdentifier());
 			Request updateReq = getRequest(node.getGraphId(), GraphEngineManagers.NODE_MANAGER, "updateDataNode");
 			updateReq.put(GraphDACParams.node.name(), node);
 			updateReq.put(GraphDACParams.node_id.name(), node.getIdentifier());
 
-			TelemetryManager.log("Updating the Node ID: " + node.getIdentifier());
+			TelemetryManager.info("Updating the Node ID: " + node.getIdentifier());
 			response = getResponse(updateReq);
 
 			response.put(FrameworkEnum.node_id.name(), channelId);
-			TelemetryManager.log("Returning Node Update Response.");
+			TelemetryManager.info("Returning Node Update Response.");
+			stopWatch.stop();
+			long durationInSeconds = stopWatch.getTime() / 1000; // Duration in seconds
+			TelemetryManager.info("Execution time for BaseFrameworkManager updateDataNode function: " + durationInSeconds + " seconds");
 		}
 		return response;
 	}

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.StopWatch;
 import org.sunbird.common.dto.Property;
 import org.sunbird.common.dto.Request;
 import org.sunbird.common.dto.Response;
@@ -17,6 +18,7 @@ import org.sunbird.graph.dac.mgr.IGraphDACNodeMgr;
 import org.sunbird.graph.service.common.DACErrorCodeConstants;
 import org.sunbird.graph.service.common.DACErrorMessageConstants;
 import org.sunbird.graph.service.operation.Neo4JBoltNodeOperations;
+import org.sunbird.telemetry.logger.TelemetryManager;
 
 /**
  * The Class GraphDACNodeMgrImpl.
@@ -112,6 +114,9 @@ public class Neo4JBoltNodeMgrImpl extends BaseDACMgr implements IGraphDACNodeMgr
 	 */
 	@Override
 	public Response updateNode(Request request) {
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+		TelemetryManager.info("Neo4jBoltNodeMgrImpl updateNOde function started");
 		String graphId = (String) request.getContext().get(GraphHeaderParams.graph_id.name());
 		org.sunbird.graph.dac.model.Node node = (org.sunbird.graph.dac.model.Node) request.get(GraphDACParams.node.name());
 		if (null == node || StringUtils.isBlank(node.getNodeType()) || StringUtils.isBlank(node.getIdentifier()))
@@ -140,7 +145,9 @@ public class Neo4JBoltNodeMgrImpl extends BaseDACMgr implements IGraphDACNodeMgr
 								DACErrorMessageConstants.STALE_DATA_UPDATED_WARNING + " | [Node Id: "
 										+ node.getIdentifier() + " and Graph Id: " + graphId + "]");
 				}
-				
+				stopWatch.stop();
+				long blockSeconds = stopWatch.getTime() / 1000;
+				TelemetryManager.info("Neo4jBoltNodeMgrImpl updateNode function block completed in " + blockSeconds + " seconds");
 				return OK(responseMap);
 			} catch (Exception e) {
 				return ERROR(e);

@@ -327,7 +327,7 @@ public class NodeManagerImpl extends BaseGraphManager implements INodeManager {
 	public void updateDataNode(final Request request) {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
-		TelemetryManager.log("NodeManagerImpl updateDataNode function started");
+		TelemetryManager.info("NodeManagerImpl updateDataNode function started");
 		final ActorRef parent = getSender();
 		String graphId = (String) request.getContext().get(GraphHeaderParams.graph_id.name());
 		String nodeId = (String) request.get(GraphDACParams.node_id.name());
@@ -347,7 +347,9 @@ public class NodeManagerImpl extends BaseGraphManager implements INodeManager {
 			String date = DateUtils.formatCurrentDate();
 
 			Node dbNode = datanode.getNodeObject(request);
-
+			StopWatch blockStopWatch = new StopWatch();
+			blockStopWatch.start();
+			TelemetryManager.info("NodeManagerImpl updateDataNode function analyze current node is dataNode or not started");
 			if (null != dbNode && StringUtils.equals(SystemNodeTypes.DATA_NODE.name(), dbNode.getNodeType())) {
 				if (null == datanode.getMetadata()) {
 					datanode.setMetadata(new HashMap<String, Object>());
@@ -371,6 +373,9 @@ public class NodeManagerImpl extends BaseGraphManager implements INodeManager {
 				getRelationsDelta(addRels, delRels, dbNode, datanode);
 				dbNodes.add(dbNode);
 			}
+			blockStopWatch.stop();
+			long blockDurationInSeconds = blockStopWatch.getTime() / 1000;
+			TelemetryManager.info("NodeManagerImpl updateDataNode block completed in " + blockDurationInSeconds + " seconds");
 			if (messages.isEmpty()) {
 				// validate the node
 				if (null == skipValidations || !skipValidations) {
@@ -414,7 +419,7 @@ public class NodeManagerImpl extends BaseGraphManager implements INodeManager {
 		}
 		stopWatch.stop();
 		long durationInSeconds = stopWatch.getTime() / 1000;
-		TelemetryManager.log("NodeManagerImpl updateDataNode function completed in " +  durationInSeconds  + " seconds");
+		TelemetryManager.info("NodeManagerImpl updateDataNode function completed in " +  durationInSeconds  + " seconds");
 	}
 
 	@SuppressWarnings("unchecked")
