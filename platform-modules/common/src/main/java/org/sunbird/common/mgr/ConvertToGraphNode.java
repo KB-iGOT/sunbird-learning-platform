@@ -96,7 +96,7 @@ public class ConvertToGraphNode {
             stopWatch.stop();
             long durationInSeconds = stopWatch.getTime() / 1000; // Duration in seconds
             TelemetryManager.info("Execution time for convertToGraphNode function: " + durationInSeconds + " seconds");
-            TelemetryManager.log("NodeData inRelations and nodeMetadata and outRelations "+(List<Relation>) node.getInRelations()+", ::"+(Map<String,Object>)node.getMetadata() + ", ::" +(List<Relation>)node.getOutRelations());
+            TelemetryManager.info("NodeData inRelations and nodeMetadata and outRelations "+(List<Relation>) node.getInRelations()+", ::"+(Map<String,Object>)node.getMetadata() + ", ::" +(List<Relation>)node.getOutRelations());
         }
         return node;
 	}
