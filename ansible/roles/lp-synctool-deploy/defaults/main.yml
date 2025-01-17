@@ -9,7 +9,7 @@ language_read_elb_url: bolt://{{ groups['learning-neo4j-node1'][0] }}:8687
 language_write_elb_url: bolt://{{ groups['learning-neo4j-node1'][0] }}:8687
 object_bookmark_expiry_in_seconds: 15
 environment_id: 10000000
-search_index_host: "{{ groups['composite-search-cluster'][0] }}:9200"
+search_index_host: "{{ groups['composite-search-cluster']|join(':9200,') }}:9200"
 hierarchy_keyspace_name: "{{env}}_hierarchy_store"
 content_keyspace_name: "{{env}}_content_store"
 sunbirddev_dialcode_store: "{{env}}_dialcode_store"
