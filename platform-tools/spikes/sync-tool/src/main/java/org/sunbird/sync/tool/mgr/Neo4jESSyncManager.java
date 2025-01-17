@@ -205,6 +205,9 @@ public class Neo4jESSyncManager implements ISyncManager {
 				
 				errors = new HashMap<>();
 				Map<String, Object> messages = SyncMessageGenerator.getMessages(nodes, objectType, errors);
+				System.out.println("Messages:"); 
+				for (Map.Entry<String, Object> entry : messages.entrySet()) 
+				{ System.out.println("Key: " + entry.getKey() + ", Value: " + entry.getValue()); }
 				if (!errors.isEmpty())
 					System.out
 							.println("Error! while forming ES document data from nodes, below nodes are ignored" + errors);
