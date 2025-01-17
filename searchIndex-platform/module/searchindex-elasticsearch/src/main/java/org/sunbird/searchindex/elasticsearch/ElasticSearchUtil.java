@@ -276,11 +276,7 @@ public class ElasticSearchUtil {
 							.source((Map<String, Object>) jsonObjects.get(key)));
 					if (count % BATCH_SIZE == 0 || (count % BATCH_SIZE < BATCH_SIZE && count == jsonObjects.size())) {
 						BulkResponse bulkResponse = client.bulk(request);
-						BulkItemResponse[] responses = bulkResponse.getItems(); 
-						for (BulkItemResponse response : responses) 
-							{ if (response.isFailed()) 
-							{ System.out.println("Failed Document ID: " + response.getId()); 
-							System.out.println("Failure Message: " + response.getFailureMessage()); } else { System.out.println("Successfully Indexed Document ID: " + response.getId()); } } } else { System.out.println("All documents in this batch indexed successfully."); }
+						System.out.println("Successfully Indexed Document ID");
 						if (bulkResponse.hasFailures()) {
 							TelemetryManager
 									.log("Failures in Elasticsearch bulkIndex : " + bulkResponse.buildFailureMessage());
