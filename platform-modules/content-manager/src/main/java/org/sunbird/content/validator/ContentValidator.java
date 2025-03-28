@@ -469,6 +469,11 @@ public class ContentValidator {
 				case "assets":
 					isValid = true;
 					break;
+
+				case "application/html":
+					isValid = true;
+					break;
+					
 				default:
 					TelemetryManager.log("Deafult Case for Mime-Type: " + mimeType);
 					if (AssetsMimeTypeMap.isAllowedMimeType(mimeType) && StringUtils.isNotBlank(
