@@ -201,7 +201,7 @@ public class FrameworkManagerImpl extends BaseFrameworkManager implements IFrame
 					ResponseCode.CLIENT_ERROR);
 		}
 		if (StringUtils.isNotBlank(frameworkId) && validateObject(frameworkId)) {
-            TelemetryManager.log("FrameworkManagerImpl publishFramework function started: " + frameworkId + " :: " + channelId);
+            TelemetryManager.info("FrameworkManagerImpl publishFramework function started: " + frameworkId + " :: " + channelId);
 			generateFrameworkHierarchy(frameworkId);
 			FrameworkCache.delete(frameworkId);
 			Response response = OK();

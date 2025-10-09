@@ -56,7 +56,7 @@ public class FrameworkHierarchy extends BaseManager {
 	public void generateFrameworkHierarchy(String id) throws Exception {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
-		TelemetryManager.log("FrameworkHierarchy generateFrameworkHierarchy function started");
+		TelemetryManager.info("FrameworkHierarchy generateFrameworkHierarchy function started");
 		Response responseNode = getDataNode(GRAPH_ID, id);
 		if (checkError(responseNode))
 			throw new ResourceNotFoundException("ERR_DATA_NOT_FOUND", "Data not found with id : " + id);
@@ -104,7 +104,7 @@ public class FrameworkHierarchy extends BaseManager {
 	private Map<String, Object> getHierarchy(String id, int index, boolean includeMetadata, boolean includeRelations) throws Exception {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
-		TelemetryManager.log("FrameworkHierarchy getHierarchy function started");
+		TelemetryManager.info("FrameworkHierarchy getHierarchy function started");
 		Map<String, Object> data = new HashMap<String, Object>();
 		Response responseNode = getDataNode(GRAPH_ID, id);
 		if (checkError(responseNode))
