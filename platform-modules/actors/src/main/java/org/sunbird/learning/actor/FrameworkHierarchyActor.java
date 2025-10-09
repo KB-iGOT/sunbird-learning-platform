@@ -34,10 +34,12 @@ public class FrameworkHierarchyActor extends BaseGraphManager {
 			} else {
 				if (StringUtils.equalsIgnoreCase(FrameworkHierarchyOperations.generateFrameworkHierarchy.name(), methodName)) {
 					String id = (String) request.get("identifier");
+                    TelemetryManager.log("FrameworkHierarchyActor invokeMethod function started for operation: " + methodName + ", identifier: " + id);
 					fwHierarchy.generateFrameworkHierarchy(id);
 					OK(parent);
 				} else if(StringUtils.equalsIgnoreCase(FrameworkHierarchyOperations.getFrameworkHierarchy.name(), methodName)){
 					String frameworkId = (String) request.get("identifier");
+                    TelemetryManager.log("FrameworkHierarchyActor invokeMethod function started for operation: " + methodName + ", identifier: " + frameworkId);
 					Map<String,Object> frameworkData = fwHierarchy.getFrameworkHierarchy(frameworkId);
 					OK("framework", frameworkData, sender());
 				} else {
