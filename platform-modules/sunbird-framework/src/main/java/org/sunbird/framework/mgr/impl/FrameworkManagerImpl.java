@@ -14,6 +14,7 @@ import org.sunbird.framework.mgr.IFrameworkManager;
 import org.sunbird.graph.dac.enums.GraphDACParams;
 import org.sunbird.graph.dac.model.Node;
 import org.springframework.stereotype.Component;
+import org.sunbird.telemetry.logger.TelemetryManager;
 
 import java.util.List;
 import java.util.Map;
@@ -200,6 +201,7 @@ public class FrameworkManagerImpl extends BaseFrameworkManager implements IFrame
 					ResponseCode.CLIENT_ERROR);
 		}
 		if (StringUtils.isNotBlank(frameworkId) && validateObject(frameworkId)) {
+            TelemetryManager.log("FrameworkManagerImpl publishFramework function started: " + frameworkId + " :: " + channelId);
 			generateFrameworkHierarchy(frameworkId);
 			FrameworkCache.delete(frameworkId);
 			Response response = OK();

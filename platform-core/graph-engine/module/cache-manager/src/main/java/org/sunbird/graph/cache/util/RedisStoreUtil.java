@@ -227,12 +227,16 @@ public class RedisStoreUtil {
 		if(StringUtils.isNotBlank(pattern) && !StringUtils.equalsIgnoreCase(pattern, "*")){
 			Jedis jedis = getRedisConncetion();
 			try {
+                TelemetryManager.log("RedisStoreUtil: Searching for keys with pattern: " + pattern);
 				Set<String> keys = jedis.keys(pattern);
+                TelemetryManager.log("RedisStoreUtil: Found " + (keys != null ? keys.size() : 0) + " keys matching pattern: " + pattern);
 				if (keys != null && keys.size() > 0) {
 					List<String> keyList = new ArrayList<>(keys);
+                    TelemetryManager.log("RedisStoreUtil: Deleting keys: " + String.join(", ", keyList));
 					jedis.del(keyList.toArray(new String[keyList.size()]));
 				}
 			} catch (Exception e) {
+                TelemetryManager.error("Error while deleteByPattern data from Redis for Identifiers : " + pattern + " | Error is : ", e);
 				throw new ServerException(GraphCacheErrorCodes.ERR_CACHE_SAVE_PROPERTY_ERROR.name(), e.getMessage());
 			} finally {
 				returnConnection(jedis);
