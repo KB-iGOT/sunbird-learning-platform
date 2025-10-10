@@ -28,6 +28,7 @@ public class RedisStoreUtil {
 		Jedis jedis = getRedisConncetion();
 		try {
 			String redisKey = CacheKeyGenerator.getNodePropertyKey(graphId, objectId, nodeProperty);
+            TelemetryManager.info("RedisStoreUtil: Saving property '" + nodeProperty + "' for object " + objectId + " in graph " + graphId + " with key: " + redisKey);
 			jedis.set(redisKey, propValue);
 		} catch (Exception e) {
 			throw new ServerException(GraphCacheErrorCodes.ERR_CACHE_SAVE_PROPERTY_ERROR.name(), e.getMessage());

@@ -56,20 +56,20 @@ public class Neo4JBoltNodeOperations {
 			throw new ClientException(DACErrorCodeConstants.INVALID_NODE.name(),
 					DACErrorMessageConstants.INVALID_NODE + " | [Upsert Node Operation Failed.]");
 
-		TelemetryManager.log("Applying the Consumer Authorization Check for Node Id: " + node.getIdentifier());
+		TelemetryManager.info("Applying the Consumer Authorization Check for Node Id: " + node.getIdentifier());
 		setRequestContextToNode(node, request);
 		validateAuthorization(graphId, node, request);
-		TelemetryManager.log("Consumer is Authorized for Node Id: " + node.getIdentifier());
+		TelemetryManager.info("Consumer is Authorized for Node Id: " + node.getIdentifier());
 
-		TelemetryManager.log("Validating the Update Operation for Node Id: " + node.getIdentifier());
+		TelemetryManager.info("Validating the Update Operation for Node Id: " + node.getIdentifier());
 		versionValidator.validateUpdateOperation(graphId, node);
 		node.getMetadata().remove(GraphDACParams.versionKey.name());
-		TelemetryManager.log("Node Update Operation has been Validated for Node Id: " + node.getIdentifier());
+		TelemetryManager.info("Node Update Operation has been Validated for Node Id: " + node.getIdentifier());
 
 		Driver driver = DriverUtil.getDriver(graphId, GraphOperation.WRITE);
-		TelemetryManager.log("Driver Initialised. | [Graph Id: " + graphId + "]");
+		TelemetryManager.info("Driver Initialised. | [Graph Id: " + graphId + "]");
 		try (Session session = driver.session()) {
-			TelemetryManager.log("Session Initialised. | [Graph Id: " + graphId + "]");
+			TelemetryManager.info("Session Initialised. | [Graph Id: " + graphId + "]");
 			node.setGraphId(graphId);
 			Map<String, Object> parameterMap = new HashMap<String, Object>();
 			parameterMap.put(GraphDACParams.graphId.name(), graphId);
