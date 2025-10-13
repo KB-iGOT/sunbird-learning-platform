@@ -58,7 +58,7 @@ public class FrameworkCache {
 
     public static void delete(String id) {
         if(StringUtils.isNotBlank(id))
-            RedisStoreUtil.deleteByPattern(CACHE_PREFIX + id + "_*");
+            RedisStoreUtil.deleteByPatternSafe(CACHE_PREFIX + id + "_*");
     }
 
 }
