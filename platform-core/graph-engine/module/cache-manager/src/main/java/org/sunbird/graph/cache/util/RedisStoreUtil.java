@@ -7,6 +7,9 @@ import org.sunbird.graph.cache.exception.GraphCacheErrorCodes;
 import org.sunbird.graph.dac.enums.GraphDACParams;
 import org.sunbird.telemetry.logger.TelemetryManager;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.Pipeline;
+import redis.clients.jedis.ScanParams;
+import redis.clients.jedis.ScanResult;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -82,6 +85,7 @@ public class RedisStoreUtil {
 	public static void saveNodeProperties(String graphId, String objectId, Map<String, Object> metadata) {
 		Jedis jedis = getRedisConncetion();
 		try {
+            TelemetryManager.info("RedisStoreUtil: Saving properties for node " + objectId + " in graph " + graphId + " with " + metadata.size() + " properties");
 			for (Entry<String, Object> entry : metadata.entrySet()) {
 				String propertyName = entry.getKey();
 				String propertyValue = entry.getValue().toString();
@@ -89,7 +93,7 @@ public class RedisStoreUtil {
 				String redisKey = CacheKeyGenerator.getNodePropertyKey(graphId, objectId, propertyName);
 				jedis.set(redisKey, propertyValue);
 			}
-
+            TelemetryManager.info("RedisStoreUtil: Successfully saved all properties for node " + objectId + " in graph " + graphId);
 		} catch (Exception e) {
 			throw new ServerException(GraphCacheErrorCodes.ERR_CACHE_SAVE_PROPERTY_ERROR.name(), e.getMessage());
 		} finally {
@@ -245,4 +249,29 @@ public class RedisStoreUtil {
 		}
 	}
 
+    public static void deleteByPatternSafe(String pattern) {
+        Jedis jedis = getRedisConncetion();
+        String cursor = ScanParams.SCAN_POINTER_START;
+        ScanParams scanParams = new ScanParams().match(pattern).count(1000);
+        try {
+            do {
+                ScanResult<String> scanResult = jedis.scan(cursor, scanParams);
+                List<String> keys = scanResult.getResult();
+
+                if (!keys.isEmpty()) {
+                    Pipeline pipeline = jedis.pipelined();
+                    for (String key : keys) {
+                        pipeline.del(key);
+                    }
+                    pipeline.sync();
+                    TelemetryManager.info("Deleted " + keys.size() + " keys for pattern: " + pattern);
+                }
+                cursor = String.valueOf(scanResult.getCursor());
+            } while (!"0".equals(cursor));
+        } catch (Exception e) {
+            TelemetryManager.error("Error deleting keys for pattern: " + pattern, e);
+        } finally {
+            returnConnection(jedis);
+        }
+    }
 }
