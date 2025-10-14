@@ -664,6 +664,11 @@ public class BaseFrameworkManager extends BaseManager {
 		}
 	}
 
-
-
+    protected void asyncDeleteFrameworkCache(String frameworkId) {
+        Request request = new Request();
+        request.setManagerName(LearningActorNames.FRAMEWORK_CACHE_DELETE_ACTOR.name());
+        request.setOperation(FrameworkHierarchyOperations.deleteFrameworkCache.name());
+        request.put("identifier", frameworkId);
+        makeLearningRequest(request);
+    }
 }
