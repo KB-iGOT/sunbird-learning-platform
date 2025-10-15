@@ -30,19 +30,40 @@ public class FrameworkCache {
         return CACHE_PREFIX + identifier.toLowerCase() + "_" + categoryNames.stream().map(cat -> cat.toLowerCase()).collect(Collectors.joining("_"));
     }
 
-
     public static Map<String, Object> get(String id, List<String> returnCategories) throws IOException {
-        if(cacheEnabled) {
-            if(CollectionUtils.isNotEmpty(returnCategories)) {
+        if (cacheEnabled) {
+            String redisKey;
+            if (CollectionUtils.isNotEmpty(returnCategories)) {
                 Collections.sort(returnCategories);
-                String cachedCategories = RedisStoreUtil.get(getFwCacheKey(id, returnCategories));
-                if(StringUtils.isNotBlank(cachedCategories)) {
-                    return mapper.readValue(cachedCategories, new TypeReference<Map<String, Object>>(){});
+                redisKey = getFwCacheKey(id, returnCategories);
+                String cachedCategories = RedisStoreUtil.get(redisKey);
+                try {
+                    String keysListKey = CACHE_PREFIX+id + "_keys";
+                    String existingKeysJson = RedisStoreUtil.get(keysListKey);
+                    List<String> keysList;
+
+                    if (StringUtils.isNotBlank(existingKeysJson)) {
+                        keysList = mapper.readValue(existingKeysJson, new TypeReference<List<String>>() {});
+                    } else {
+                        keysList = new ArrayList<>();
+                    }
+
+                    if (!keysList.contains(redisKey)) {
+                        keysList.add(redisKey);
+                        RedisStoreUtil.save(keysListKey, mapper.writeValueAsString(keysList), cacheTtl * 2);
+                        TelemetryManager.info("Added key " + redisKey + " to list " + keysListKey);
+                    }
+                } catch (Exception e) {
+                    TelemetryManager.error("Error while maintaining _keys list for framework: " + id, e);
+                }
+                if (StringUtils.isNotBlank(cachedCategories)) {
+                    return mapper.readValue(cachedCategories, new TypeReference<Map<String, Object>>() {});
                 }
             } else {
-                String frameworkMetadata = RedisStoreUtil.get(id);
-                if(StringUtils.isNotBlank(frameworkMetadata)) {
-                    return mapper.readValue(frameworkMetadata, new TypeReference<Map<String, Object>>(){});
+                redisKey = id;
+                String frameworkMetadata = RedisStoreUtil.get(redisKey);
+                if (StringUtils.isNotBlank(frameworkMetadata)) {
+                    return mapper.readValue(frameworkMetadata, new TypeReference<Map<String, Object>>() {});
                 }
             }
         }
