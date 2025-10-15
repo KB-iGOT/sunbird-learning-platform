@@ -663,7 +663,4 @@ public class BaseFrameworkManager extends BaseManager {
 			removeAssociations(framework, categoryNames);
 		}
 	}
-
-
-
 }

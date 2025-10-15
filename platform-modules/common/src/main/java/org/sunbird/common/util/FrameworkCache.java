@@ -8,8 +8,10 @@ import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.sunbird.common.Platform;
 import org.sunbird.graph.cache.util.RedisStoreUtil;
+import org.sunbird.telemetry.logger.TelemetryManager;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -53,12 +55,26 @@ public class FrameworkCache {
             Collections.sort(categoryNames);
             String key = getFwCacheKey((String) framework.get("identifier"), categoryNames);
             RedisStoreUtil.save(key, mapper.writeValueAsString(framework), cacheTtl);
+            List<String> keysList = new ArrayList<>();
+
+            String existingKeysJson = RedisStoreUtil.get((String) framework.get("identifier") + "_keys");
+            if (StringUtils.isNotBlank(existingKeysJson)) {
+                try {
+                    keysList = mapper.readValue(existingKeysJson, new TypeReference<List<String>>(){});
+                } catch (IOException e) {
+                    TelemetryManager.error("Error parsing existing framework keys: " + e.getMessage(), e);
+                }
+            }
+            if (!keysList.contains(key)) {
+                keysList.add(key);
+            }
+            RedisStoreUtil.save((String) framework.get("identifier")+"_keys", mapper.writeValueAsString(keysList), cacheTtl * 2);
         }
     }
 
     public static void delete(String id) {
         if(StringUtils.isNotBlank(id))
-            RedisStoreUtil.deleteByPatternSafe(CACHE_PREFIX + id + "_*");
+            RedisStoreUtil.deleteByPatternSafe(CACHE_PREFIX + id);
     }
 
 }

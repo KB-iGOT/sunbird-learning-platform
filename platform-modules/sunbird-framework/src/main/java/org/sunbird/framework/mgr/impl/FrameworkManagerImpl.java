@@ -206,7 +206,7 @@ public class FrameworkManagerImpl extends BaseFrameworkManager implements IFrame
 			generateFrameworkHierarchy(frameworkId);
             StopWatch stopWatch = new StopWatch();
             stopWatch.start();
-			FrameworkCache.delete(frameworkId);
+            FrameworkCache.delete(frameworkId);
             stopWatch.stop();
             long durationInSeconds = stopWatch.getTime() / 1000;
             TelemetryManager.info("FrameworkCache deletion for ID " + frameworkId + " took: " + durationInSeconds + " seconds");
