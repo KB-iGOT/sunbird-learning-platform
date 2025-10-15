@@ -16,7 +16,6 @@ import org.sunbird.common.exception.ServerException;
 import org.sunbird.common.router.RequestRouterPool;
 import org.sunbird.graph.common.enums.GraphHeaderParams;
 import org.sunbird.learning.actor.ContentStoreActor;
-import org.sunbird.learning.actor.FrameworkCacheDeleteActor;
 import org.sunbird.learning.actor.FrameworkHierarchyActor;
 import org.sunbird.learning.actor.LocalCacheUpdateActor;
 import org.sunbird.learning.common.enums.LearningActorNames;
@@ -90,15 +89,12 @@ public class LearningRequestRouter extends UntypedActor {
 		Props contentStoreProps = Props.create(ContentStoreActor.class);
 		Props fwhierarchyProps = Props.create(FrameworkHierarchyActor.class);
 		Props localCacheUpdaterProps = Props.create(LocalCacheUpdateActor.class);
-        Props fwCacheDeleteProps = Props.create(FrameworkCacheDeleteActor.class);
 		ActorRef contentStoreActor = system.actorOf(new SmallestMailboxPool(poolSize).props(contentStoreProps));
 		ActorRef fwHierarchyActor = system.actorOf(new SmallestMailboxPool(poolSize).props(fwhierarchyProps));
 		ActorRef localCacheUpdaterActor = system.actorOf(new SmallestMailboxPool(poolSize).props(localCacheUpdaterProps));
-        ActorRef fwCacheDeleteActor = system.actorOf(new SmallestMailboxPool(poolSize).props(fwCacheDeleteProps));
 		LearningActorPool.addActorRefToPool(LearningActorNames.CONTENT_STORE_ACTOR.name(), contentStoreActor);
 		LearningActorPool.addActorRefToPool(LearningActorNames.FRAMEWORK_HIERARCHY_ACTOR.name(), fwHierarchyActor);
 		LearningActorPool.addActorRefToPool(LearningActorNames.CACHE_UPDATE_ACTOR.name(), localCacheUpdaterActor);
-        LearningActorPool.addActorRefToPool(LearningActorNames.FRAMEWORK_CACHE_DELETE_ACTOR.name(), fwCacheDeleteActor);
 	}
 
 	/**

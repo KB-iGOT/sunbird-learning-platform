@@ -204,7 +204,12 @@ public class FrameworkManagerImpl extends BaseFrameworkManager implements IFrame
 		if (StringUtils.isNotBlank(frameworkId) && validateObject(frameworkId)) {
             TelemetryManager.info("FrameworkManagerImpl publishFramework function started: " + frameworkId + " :: " + channelId);
 			generateFrameworkHierarchy(frameworkId);
-            asyncDeleteFrameworkCache(frameworkId);
+            StopWatch stopWatch = new StopWatch();
+            stopWatch.start();
+            FrameworkCache.delete(frameworkId);
+            stopWatch.stop();
+            long durationInSeconds = stopWatch.getTime() / 1000;
+            TelemetryManager.info("FrameworkCache deletion for ID " + frameworkId + " took: " + durationInSeconds + " seconds");
 			Response response = OK();
 			response.put(FrameworkEnum.publishStatus.name(),
 					"Publish Operation for Framework Id '" + frameworkId + "' Started Successfully!");

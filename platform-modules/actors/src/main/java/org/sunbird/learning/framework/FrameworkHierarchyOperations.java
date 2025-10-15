@@ -8,5 +8,5 @@ package org.sunbird.learning.framework;
  *
  */
 public enum FrameworkHierarchyOperations {
-	generateFrameworkHierarchy, getFrameworkHierarchy, deleteFrameworkCache
+	generateFrameworkHierarchy, getFrameworkHierarchy
 }

@@ -2,6 +2,7 @@ package org.sunbird.graph.cache.util;
 
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.sunbird.common.exception.ServerException;
 import org.sunbird.graph.cache.exception.GraphCacheErrorCodes;
 import org.sunbird.graph.dac.enums.GraphDACParams;
@@ -11,6 +12,7 @@ import redis.clients.jedis.Pipeline;
 import redis.clients.jedis.ScanParams;
 import redis.clients.jedis.ScanResult;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -249,29 +251,36 @@ public class RedisStoreUtil {
 		}
 	}
 
-    public static void deleteByPatternSafe(String pattern) {
-        Jedis jedis = getRedisConncetion();
-        String cursor = ScanParams.SCAN_POINTER_START;
-        ScanParams scanParams = new ScanParams().match(pattern).count(1000);
-        try {
-            do {
-                ScanResult<String> scanResult = jedis.scan(cursor, scanParams);
-                List<String> keys = scanResult.getResult();
+    public static void deleteByPatternSafe(String frameworkId) {
+        if (StringUtils.isNotBlank(frameworkId)) {
+            String keysJson = RedisStoreUtil.get(frameworkId + "_keys");
+            if (StringUtils.isNotBlank(keysJson)) {
+                try {
+                    ObjectMapper mapper = new ObjectMapper();
+                    List<String> keysList = mapper.readValue(keysJson, new TypeReference<List<String>>() {});
 
-                if (!keys.isEmpty()) {
-                    Pipeline pipeline = jedis.pipelined();
-                    for (String key : keys) {
-                        pipeline.del(key);
+                    if (!keysList.isEmpty()) {
+                        Jedis jedis = getRedisConncetion();
+                        try {
+                            Pipeline pipeline = jedis.pipelined();
+                            for (String key : keysList) {
+                                pipeline.del(key);
+                            }
+                            pipeline.del( frameworkId + "_keys");
+                            pipeline.sync();
+                            TelemetryManager.info("Deleted " + keysList.size() + " keys for framework: " + frameworkId);
+                        } finally {
+                            returnConnection(jedis);
+                        }
+                    } else {
+                        TelemetryManager.info("No keys to delete for framework: " + frameworkId);
                     }
-                    pipeline.sync();
-                    TelemetryManager.info("Deleted " + keys.size() + " keys for pattern: " + pattern);
+                } catch (IOException e) {
+                    TelemetryManager.error("Error parsing keys for framework: " + frameworkId, e);
                 }
-                cursor = String.valueOf(scanResult.getCursor());
-            } while (!"0".equals(cursor));
-        } catch (Exception e) {
-            TelemetryManager.error("Error deleting keys for pattern: " + pattern, e);
-        } finally {
-            returnConnection(jedis);
+            } else {
+                TelemetryManager.info("No Redis _keys entry found for framework: " + frameworkId);
+            }
         }
     }
 }
