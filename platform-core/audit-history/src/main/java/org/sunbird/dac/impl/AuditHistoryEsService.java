@@ -159,9 +159,9 @@ public class AuditHistoryEsService extends BaseDataAccessService implements IAud
 		sortBy.put(GraphDACParams.createdOn.name(), "desc");
 		sortBy.put("operation", "desc");
 		search.setSortBy(sortBy);
-		TelemetryManager.log("setting search criteria to fetch audit records from ES: " + search);
+		TelemetryManager.info("setting search criteria to fetch audit records from ES: " + search);
 		List<Object> auditHistoryLogEntities = dao.search(search);
-		TelemetryManager.log("list of fields returned from ES based on search query: " + auditHistoryLogEntities);
+		TelemetryManager.info("list of fields returned from ES based on search query: " + auditHistoryLogEntities);
 		return OK(CommonDACParams.audit_history_record.name(), getResponseObject(auditHistoryLogEntities));
 	}
 

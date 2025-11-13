@@ -139,7 +139,7 @@ public class AuditHistoryManager implements IAuditHistoryManager {
 	public Response getAuditHistoryById(String graphId, String objectId, String startTime, String endTime,
 			String versionId) {
 		Request request = new Request();
-		TelemetryManager.log("Checking if received parameters are empty or not" + graphId + objectId);
+		TelemetryManager.info("Checking if received parameters are empty or not" + graphId + objectId);
 		if (StringUtils.isNotBlank(graphId) && StringUtils.isNotBlank(objectId)) {
 			request.put(CommonDACParams.graph_id.name(), graphId);
 			request.put(CommonDACParams.object_id.name(), objectId);
@@ -147,7 +147,7 @@ public class AuditHistoryManager implements IAuditHistoryManager {
 		request.put(CommonDACParams.start_date.name(), startTime);
 		request.put(CommonDACParams.end_date.name(), endTime);
 
-		TelemetryManager.log("Sending request to auditHistoryEsService" , request.getRequest());
+		TelemetryManager.info("Sending request to auditHistoryEsService" , request.getRequest());
 		Response response = null;
 		try {
 			response = auditHistoryEsService.getAuditHistoryLogByObjectId(request, versionId);

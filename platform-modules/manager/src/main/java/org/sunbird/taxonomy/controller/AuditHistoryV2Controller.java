@@ -98,11 +98,11 @@ public class AuditHistoryV2Controller extends BaseController {
 			@RequestHeader(value = "user-id") String userId) {
 		String apiId = "ekstep.audit_history.info";
 
-		TelemetryManager.log("get AuditHistory By ObjectId | " +  "GraphId: " + graphId + " | TimeStamp1: " + startTime
+		TelemetryManager.info("get AuditHistory By ObjectId | " +  "GraphId: " + graphId + " | TimeStamp1: " + startTime
 				+ " | Timestamp2: " + endTime + " | ObjectId: " + objectId);
 		try {
 			Response response = auditHistoryManager.getAuditHistoryById(graphId, objectId, startTime, endTime, versionId);
-			TelemetryManager.log("Find Item | Response: " + response.getResponseCode());
+			TelemetryManager.info("Find Item | Response: " + response.getResponseCode());
 			return getResponseEntity(response, apiId, null);
 		} catch (Exception e) {
 			TelemetryManager.error("Find Item | Exception: " + e.getMessage(), e);
