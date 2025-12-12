@@ -104,7 +104,7 @@ public class ReviewFinalizer extends BaseFinalizer {
 			throw new ClientException(ContentErrorCodeConstants.INVALID_PARAMETER.name(),
 					ContentErrorMessageConstants.INVALID_CWP_FINALIZE_PARAM + " | [Invalid or null Node.]");
 
-		if(StringUtils.equalsIgnoreCase((String)node.getMetadata().get("mimeType"), "application/vnd.ekstep.content-collection")){
+		if(StringUtils.equalsIgnoreCase((String)node.getMetadata().get("mimeType"), "application/vnd.ekstep.content-collection") && !StringUtils.equalsIgnoreCase((String) node.getMetadata().get("courseCategory"), "Learning Pathway")){
 			validateResource(node.getIdentifier());
 		}
 
