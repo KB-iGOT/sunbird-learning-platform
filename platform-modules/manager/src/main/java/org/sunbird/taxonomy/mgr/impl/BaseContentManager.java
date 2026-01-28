@@ -113,6 +113,8 @@ public abstract class BaseContentManager extends BaseManager {
 
     protected static final List<String> VALID_FLAG_OBJECT_TYPES = Arrays.asList("Content", "Collection", "Asset");
 
+    protected static final String EXTENDED_CONTENT_READ_KEY_PREFIX = "extended_read_content_";
+
     protected String getId(String identifier) {
 		if (StringUtils.endsWith(identifier, ".img")) {
 			return identifier.replace(".img", "");
@@ -449,6 +451,7 @@ public abstract class BaseContentManager extends BaseManager {
     protected void clearRedisCache(String originalId) {
         RedisStoreUtil.delete(originalId);
         RedisStoreUtil.delete(COLLECTION_CACHE_KEY_PREFIX + originalId);
+        RedisStoreUtil.delete(EXTENDED_CONTENT_READ_KEY_PREFIX + originalId);
     }
 
     private void setPassportKey(Map<String, Object> changedData) {
