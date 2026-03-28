@@ -1552,7 +1552,7 @@
         },
         {
           "required": false,
-          "dataType": "Term",
+          "dataType": "Text",
           "propertyName": "difficultyLevel",
           "title": "Difficulty Level",
           "description": "Difficulty Level",
