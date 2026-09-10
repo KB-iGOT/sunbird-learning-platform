@@ -140,18 +140,34 @@ public class TermManagerImpl extends BaseFrameworkManager implements ITermManage
 			validateCategoryId(categoryId);
 		}
 		String newTermId = generateIdentifier(categoryId, termId);
-		
-		if(!request.containsKey(TermEnum.parents.name()) || ((List<Object>)request.get(TermEnum.parents.name())).isEmpty()) {
-			setRelations(categoryId, request);
-			request.put(TermEnum.parents.name(), null);
-		}else {
-			Response responseNode = getDataNode(GRAPH_ID, categoryId);
-			Node dataNode = (Node) responseNode.get(GraphDACParams.node.name());
-			String objectType = dataNode.getObjectType();
-			if(StringUtils.equalsIgnoreCase(StringUtils.lowerCase(objectType), TermEnum.categoryinstance.name())) {
-				request.put(TermEnum.categories.name(), null);
+
+		//Optimization:Lazy Relation Loading - Only call setRelations if parents are explicitly being set
+		boolean hasParentsKey = request.containsKey(TermEnum.parents.name());
+
+		if (hasParentsKey) {
+			List<Object> parentsList = (List<Object>) request.get(TermEnum.parents.name());
+
+			if (parentsList == null || parentsList.isEmpty()) {
+				// Explicitly setting parents to empty/null - call setRelations to set default parent
+				setRelations(categoryId, request);
+				request.put(TermEnum.parents.name(), null);
+			} else {
+				// Parents are explicitly provided - use them as-is, don't call setRelations
+				// This preserves existing child associations without rebuilding all relations
+				Response responseNode = getDataNode(GRAPH_ID, categoryId);
+				Node dataNode = (Node) responseNode.get(GraphDACParams.node.name());
+				String objectType = dataNode.getObjectType();
+				if(StringUtils.equalsIgnoreCase(StringUtils.lowerCase(objectType), TermEnum.categoryinstance.name())) {
+					request.put(TermEnum.categories.name(), null);
+				}
 			}
+		} else {
+			// No parents key in request - this is a property-only update
+			// Skip setRelations() entirely - relations remain unchanged
+			// This is the main optimization: avoid expensive relation updates when only updating properties
+			TelemetryManager.info("Property-only update for term: " + newTermId + ". Skipping relation updates.");
 		}
+
 		request.put("category", category);
 		return update(newTermId, TERM_OBJECT_TYPE, request);
 	}
