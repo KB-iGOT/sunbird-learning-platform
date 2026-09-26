@@ -22,7 +22,7 @@ public enum ContentWorkflowPipelineParams {
 	HTML_FILE, JS_FILE, CSS_FILE, XML_FILE, nodes, bundle, basePath, bundleMap, bundleFileName, ECAR_URL, Contents, manifestVersion, 
 	contentIdList, visibility, Parent, upload, publish, grayScaleAppIcon, expires, flagReasons, Retired, validate, Review, review, 
 	isPublishOperation, Processing, Draft, uploadError, publishError, reviewError, _temp, Failed, TextBook, TextBookUnit, 
-	compatibilityLevel, baseUrl, ecarUrl, spine, variants, isImageObject, ContentImage, youtube, pdf, msword, screenshots, 
+	compatibilityLevel, baseUrl, ecarUrl, spine, variants, isImageObject, ContentImage, youtube, pdf, msword, html, htm, screenshots,
 	Course, CourseUnit, LessonPlan, LessonPlanUnit, contentDisposition, publish_type, Unlisted, Public, Pending, previewUrl, 
 	streamingUrl, channel, online, leafNodesCount, domain, gradeLevel, ageGroup, medium, genre, keywords, lastUpdatedOn, index, parent,
 	childNodes, originData,depth,collections, itemSetPreviewUrl,offline;
