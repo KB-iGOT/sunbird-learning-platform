@@ -62,6 +62,7 @@ public class MimeTypeManagerFactory {
 			case "application/pdf":
 			case "application/epub":
 			case "application/msword":
+			case "application/vnd.ekstep.html":
 				manager = documentMimeTypeMgr;
 				break;
 			case "application/vnd.ekstep.h5p-archive":
